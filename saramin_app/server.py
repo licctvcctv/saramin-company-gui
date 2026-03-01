@@ -81,7 +81,7 @@ def _resolve_port(host: str, requested_port: int) -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Saramin 企业采集 GUI 后台服务")
     parser.add_argument("--host", default="127.0.0.1")
-    parser.add_argument("--port", type=int, default=18080)
+    parser.add_argument("--port", type=int, default=19180)
     parser.add_argument("--no-browser", action="store_true")
     args = parser.parse_args(argv)
 

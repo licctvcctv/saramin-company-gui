@@ -17,7 +17,7 @@ python launcher.py
 默认会自动打开浏览器；如需手动打开：
 
 ```bash
-python -m saramin_app.server --no-browser --port 19080
+python -m saramin_app.server --no-browser --port 19180
 ```
 
 ## 打包 EXE
