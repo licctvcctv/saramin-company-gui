@@ -1,0 +1,135 @@
+label {
+  display: block;
+  font-size: 0.9rem;
+  color: #24324a;
+  margin-top: 0.3rem;
+}
+
+input {
+  margin-top: 0.4rem;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #dae4f5;
+  padding: 0.56rem 0.68rem;
+  background: rgba(255, 255, 255, 0.85);
+  font-family: inherit;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+input[type="range"] {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  accent-color: var(--accent-2);
+}
+
+.range-row {
+  margin-top: 0.45rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.range-value {
+  min-width: 5.8rem;
+  text-align: center;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.82rem;
+  color: #103360;
+  background: #e7f1ff;
+  border: 1px solid #c8dbf6;
+}
+
+.region-grid {
+  margin-top: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.region-item {
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+  border: 1px solid #d9e4f5;
+  padding: 0.44rem 0.55rem;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.86rem;
+  background: #fff;
+  transition: all .15s ease;
+}
+
+.region-item:hover { transform: translateY(-2px); }
+.region-item input { margin: 0; width: 12px; }
+
+.actions {
+  margin-top: 0.35rem;
+  display: flex;
+  gap: 0.7rem;
+}
+
+.btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.62rem 1.05rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(120deg, var(--accent), #ff5f6b);
+  box-shadow: 0 14px 28px rgba(255, 140, 55, 0.32);
+}
+
+.btn-subtle {
+  background: linear-gradient(120deg, #1f6ed6, #274b8e);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+#statusText {
+  margin-bottom: 0.4rem;
+  font-weight: 700;
+  color: #102748;
+}
+
+.links {
+  margin-top: 0.7rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.links a {
+  text-decoration: none;
+  display: inline-block;
+  color: #fff;
+  font-size: 0.84rem;
+  background: #102b4f;
+  border-radius: 9px;
+  padding: 0.42rem 0.8rem;
+}
+
+.muted {
+  margin-top: 0.4rem;
+  color: var(--subtle);
+  font-size: 0.85rem;
+}
+
+small {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--subtle);
+  margin-top: 0.2rem;
+}

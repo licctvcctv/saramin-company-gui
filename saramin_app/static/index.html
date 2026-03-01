@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saramin 企业爬取器</title>
+  <link rel="stylesheet" href="/static/styles/variables.css" />
+  <link rel="stylesheet" href="/static/styles/layout.css" />
+  <link rel="stylesheet" href="/static/styles/ui.css" />
+</head>
+<body>
+  <div class="page-wrap">
+    <header class="hero-card">
+      <p class="eyebrow">사람인 招聘源</p>
+      <h1>企业信息采集器</h1>
+      <p>采集字段：公司名、老板名、公司官网、源头链接。界面只保留常用功能，减少误操作。</p>
+    </header>
+
+    <main class="layout">
+      <section class="panel">
+        <form id="collectForm" class="form-grid">
+          <input type="hidden" name="source" value="saramin" />
+
+          <label>
+            采集条数
+            <input type="number" name="max_items" min="0" value="1000" />
+            <small>建议 300-3000，0 表示不限制</small>
+          </label>
+
+          <label>
+            并发线程
+            <input type="number" name="workers" min="1" value="6" />
+            <small>并发越高越快，建议 4-8</small>
+          </label>
+
+          <label>
+            最大页数
+            <input type="number" name="max_pages" min="1" value="120" />
+            <small>防止无限采集，默认 120 页</small>
+          </label>
+
+          <label class="field-span">
+            抖动(秒)
+            <div class="range-row">
+              <input id="jitterRange" type="range" name="jitter" min="0" max="1.2" step="0.05" value="0.15" />
+              <span id="jitterValue" class="range-value">0.15 秒</span>
+            </div>
+            <small>抖动越大越稳，抖动越小越快</small>
+          </label>
+
+          <label class="field-span">
+            区域选择
+            <small>可多选；不选则默认使用首尔</small>
+            <div id="regionWrap" class="region-grid"></div>
+          </label>
+
+          <div class="actions">
+            <button id="startBtn" type="submit" class="btn btn-primary">开始采集</button>
+            <button id="stopBtn" type="button" class="btn btn-subtle">停止任务</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>状态与结果</h2>
+        <div id="statusText">未启动</div>
+        <p class="muted">运行中每 1.5 秒刷新一次，异常链接会自动跳过。</p>
+        <pre id="logArea">等待开始...</pre>
+        <div id="links" class="links"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/scripts/app.js"></script>
+</body>
+</html>
