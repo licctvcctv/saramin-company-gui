@@ -50,8 +50,14 @@
 
           <label class="field-span">
             区域选择
-            <small>可多选；不选则默认使用首尔</small>
+            <small>可多选；不选则默认使用首尔。粘贴自定义链接后区域选择将被忽略。</small>
             <div id="regionWrap" class="region-grid"></div>
+          </label>
+
+          <label class="field-span">
+            自定义链接
+            <textarea id="urlsInput" name="urls" rows="3" placeholder="粘贴 Saramin 链接（每行一个），填写后将忽略区域选择"></textarea>
+            <small>支持粘贴多个链接（每行一个），爬虫会依次处理并自动去重</small>
           </label>
 
           <div class="actions">

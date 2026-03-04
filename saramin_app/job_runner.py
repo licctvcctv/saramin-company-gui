@@ -148,8 +148,24 @@ class JobRunner:
             argv.append("--verbose")
 
         parsed = parse_saramin_args(argv)
-        if locations:
-            parsed.url = self._build_url_with_locations(parsed.url, locations)
+
+        # 支持多链接：前端传入 urls 列表时优先使用
+        raw_urls = params.get("urls")
+        if raw_urls and isinstance(raw_urls, (list, tuple)):
+            cleaned_urls = [u.strip() for u in raw_urls if isinstance(u, str) and u.strip()]
+            if cleaned_urls:
+                parsed.urls = cleaned_urls
+                # 第一个 URL 作为 fallback 的 args.url
+                parsed.url = cleaned_urls[0]
+            else:
+                parsed.urls = None
+                if locations:
+                    parsed.url = self._build_url_with_locations(parsed.url, locations)
+        else:
+            parsed.urls = None
+            if locations:
+                parsed.url = self._build_url_with_locations(parsed.url, locations)
+
         parsed.output_csv = str(Path(parsed.output_csv).resolve())
         parsed.output_xlsx = str(Path(parsed.output_xlsx).resolve())
 
@@ -166,6 +182,11 @@ class JobRunner:
                 job,
                 f"参数: source=Saramin, start_page={args.start_page}, max_pages={args.max_pages}",
             )
+            urls = getattr(args, "urls", None)
+            if urls and len(urls) > 1:
+                self._append_log(job, f"多链接模式: 共 {len(urls)} 个链接")
+                for i, u in enumerate(urls):
+                    self._append_log(job, f"  链接 {i + 1}: {u[:100]}{'...' if len(u) > 100 else ''}")
             args.output_csv = str(Path(args.output_csv).resolve())
             args.output_xlsx = str(Path(args.output_xlsx).resolve())
             job.csv_path = Path(args.output_csv)

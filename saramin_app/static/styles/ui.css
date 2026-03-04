@@ -17,6 +17,20 @@ input {
   font-size: 0.95rem;
 }
 
+textarea {
+  margin-top: 0.4rem;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #dae4f5;
+  padding: 0.56rem 0.68rem;
+  background: rgba(255, 255, 255, 0.85);
+  font-family: inherit;
+  color: var(--text);
+  font-size: 0.88rem;
+  resize: vertical;
+  min-height: 3.6rem;
+}
+
 input[type="range"] {
   margin: 0;
   padding: 0;

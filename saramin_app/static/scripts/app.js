@@ -1,13 +1,22 @@
 const REGIONS = [
   { code: '101000', name: '首尔' },
-  { code: '108000', name: '仁川' },
-  { code: '104000', name: '大邱' },
-  { code: '104100', name: '釜山' },
-  { code: '105000', name: '江原道' },
-  { code: '107000', name: '光州' },
-  { code: '116000', name: '大田' },
+  { code: '102000', name: '경기' },
   { code: '103000', name: '京畿道' },
+  { code: '104000', name: '大邱' },
+  { code: '105000', name: '江原道' },
+  { code: '106000', name: '釜山' },
+  { code: '107000', name: '光州' },
+  { code: '108000', name: '仁川' },
   { code: '109000', name: '蔚山' },
+  { code: '110000', name: '경남' },
+  { code: '111000', name: '경북' },
+  { code: '112000', name: '전남' },
+  { code: '113000', name: '전북' },
+  { code: '114000', name: '충북' },
+  { code: '115000', name: '충남' },
+  { code: '116000', name: '大田' },
+  { code: '117000', name: '제주' },
+  { code: '118000', name: '세종' },
 ];
 
 const BASE_URL =
@@ -76,10 +85,20 @@ function getSelectedLocations() {
   return values;
 }
 
+function getCustomUrls() {
+  const textarea = document.getElementById('urlsInput');
+  if (!textarea) return [];
+  return textarea.value
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0 && line.startsWith('http'));
+}
+
 function getPayload() {
   const formData = new FormData(form);
   const rawLocations = getSelectedLocations();
   const jitter = Math.max(0, toNumber(formData.get('jitter'), DEFAULTS.jitter));
+  const customUrls = getCustomUrls();
 
   const payload = {
     source: DEFAULTS.source,
@@ -98,6 +117,12 @@ function getPayload() {
     url: BASE_URL,
     locations: rawLocations,
   };
+
+  // 自定义链接优先于区域选择
+  if (customUrls.length > 0) {
+    payload.urls = customUrls;
+    delete payload.locations;
+  }
 
   const ts = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, 14);
   payload.output_csv = `outputs/saramin_jobs_${ts}.csv`;

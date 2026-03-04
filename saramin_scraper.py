@@ -1275,23 +1275,59 @@ def run_scrape(
         with write_lock:
             _ensure_output_open()
 
-        records = iter_list_records(
-            session=session,
-            base_url=args.url,
-            start_page=args.start_page,
-            max_pages=args.max_pages,
-            max_items=args.max_items,
-            page_size=args.page_size,
-            sleep_sec=args.sleep,
-            jitter=args.jitter,
-            timeout=args.timeout,
-            max_retries=args.max_retries,
-            backoff=args.backoff,
-            verbose=args.verbose,
-            progress_callback=progress_callback,
-            stop_event=stop_event,
-            total_callback=lambda value: total_count.__setitem__("value", value),
-        )
+        urls: list[str] = getattr(args, "urls", None) or [args.url]
+        global_seen_ids: set[str] = set()
+        url_totals: dict[int, int] = {}
+
+        def _iter_all_urls() -> Iterable[SaraminRecord]:
+            items_yielded = 0
+            for url_index, url in enumerate(urls):
+                if stop_event is not None and stop_event.is_set():
+                    return
+                if len(urls) > 1:
+                    _log(
+                        f"[SARAMIN] 开始第 {url_index + 1}/{len(urls)} 个链接",
+                        verbose=True,
+                        callback=progress_callback,
+                    )
+
+                # 用 default arg 捕获当前 url_index 值，避免闭包引用问题
+                def _on_total(value: int | None, _idx: int = url_index) -> None:
+                    if value is not None and _idx not in url_totals:
+                        url_totals[_idx] = value
+                        total_count["value"] = sum(url_totals.values())
+
+                remaining_items = 0
+                if 0 < args.max_items:
+                    remaining_items = args.max_items - items_yielded
+                    if remaining_items <= 0:
+                        return
+
+                for record in iter_list_records(
+                    session=session,
+                    base_url=url,
+                    start_page=args.start_page,
+                    max_pages=args.max_pages,
+                    max_items=remaining_items if 0 < args.max_items else 0,
+                    page_size=args.page_size,
+                    sleep_sec=args.sleep,
+                    jitter=args.jitter,
+                    timeout=args.timeout,
+                    max_retries=args.max_retries,
+                    backoff=args.backoff,
+                    verbose=args.verbose,
+                    progress_callback=progress_callback,
+                    stop_event=stop_event,
+                    total_callback=_on_total,
+                ):
+                    if record.rec_id != MISSING and record.rec_id in global_seen_ids:
+                        continue
+                    if record.rec_id != MISSING:
+                        global_seen_ids.add(record.rec_id)
+                    yield record
+                    items_yielded += 1
+
+        records = _iter_all_urls()
 
         cache_batch: list[SaraminRecord] = []
         for record in records:
